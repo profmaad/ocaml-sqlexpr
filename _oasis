@@ -5,12 +5,13 @@ Synopsis:    Type-safe, convenient SQLite database access.
 Authors:     Mauricio Fernandez <mfp@acm.org>
 Maintainers: Mauricio Fernandez <mfp@acm.org>
 License:     LGPL-2.1 with OCaml linking exception
-Plugins:     DevFiles (0.3), META (0.3)
+Plugins:     DevFiles (0.3)
 BuildTools:  ocamlbuild
 Homepage:    http://github.com/mfp/ocaml-sqlexpr
 OCamlVersion: >= 4.01
 AlphaFeatures: ocamlbuild_more_args
-XOCamlbuildPluginTags: package(cppo_ocamlbuild)
+XOCamlbuildPluginTags: package(cppo_ocamlbuild), package(ppx_driver.ocamlbuild)
+FilesAB:     src/META.ab
 Description:
   Minimalistic library and syntax extension for type-safe, convenient execution
   of SQL statements. Currently compatible with Sqlite3.
@@ -50,32 +51,56 @@ Library "sqlexpr_syntax"
   FindlibParent:    sqlexpr
   Modules:          Pa_sql
   BuildDepends:     camlp4.lib, camlp4.quotations.r, estring
-  XMETADescription: Syntax extension for SQL statements/expressions
-  XMETAType:        syntax
-  XMETARequires:    camlp4, estring
 
-Library "ppx"
+Library "ppx_sqlexpr"
   Path:             src/ppx/
   FindlibName:      ppx
   FindlibParent:    sqlexpr
-  XMETADescription: PPX extension for SQL statements/expressions
-  XMETARequires:    sqlexpr
-  XMETAExtraLines:  ppx = "ppx_sqlexpr"
+  Modules:          Sqlexpr_parser, Ppx_sqlexpr
+  BuildDepends:
+    compiler-libs.common,
+    threads,
+    ppx_core,
+    ppx_driver,
+    ppx_tools,
+    ppx_tools.metaquot,
+    re.pcre,
+    sqlexpr
 
-Executable "ppx_sqlexpr"
-  Path:             src/ppx/
-  MainIs:           ppx_sqlexpr.ml
-  BuildDepends:     unix, re.pcre, compiler-libs.common, ppx_tools.metaquot
+Executable "ppx"
+  Path:             src/as_ppx/
+  MainIs:           ppx.ml
+  BuildDepends:     sqlexpr.ppx, ppx_driver
   CompiledObject:   best
   Install:          true
 
 Executable "example"
-  Path:             tests/
-  MainIs:           example.ml
-  BuildDepends:     sqlexpr.syntax, sqlexpr
-  CompiledObject:   best
-  Install:          false
-  Build:            false  # FIXME
+  Path:           tests/
+  MainIs:         example.ml
+  BuildDepends:   sqlexpr.syntax, sqlexpr
+  CompiledObject: best
+  Install:        false
+  Build:          false  # FIXME
+
+Executable "example_ppx"
+  Path:           tests/
+  MainIs:         example_ppx.ml
+  ByteOpt:        -ppx ../_build/as_ppx/ppx.native
+  NativeOpt:      -ppx ../_build/as_ppx/ppx.native
+  BuildDepends:   sqlexpr
+  CompiledObject: best
+  Install:        false
+  Build:          false  # FIXME
+
+Executable "t_ppx_parse"
+  Path:           tests/
+  MainIs:         t_ppx_parse.ml
+  ByteOpt:        -ppx ../_build/as_ppx/ppx.native
+  NativeOpt:      -ppx ../_build/as_ppx/ppx.native
+  BuildDepends:   sqlexpr, oUnit
+  CompiledObject: best
+  Install:        false
+  Build:          true
 
 Document sqlexpr
     Title:                API reference for Sqlexpr

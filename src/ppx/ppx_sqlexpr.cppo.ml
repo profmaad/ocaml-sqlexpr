@@ -137,25 +137,57 @@ let call_sqlcheck loc = function
   | _ -> raise (Location.Error(Location.error ~loc (
     "sqlcheck extension accepts \"sqlite\"")))
 
-let new_mapper argv = Ast_mapper.({
-  default_mapper with
-  expr = fun mapper expr ->
-    match expr with
-    (* is this an extension node? *)
-    | {pexp_desc = Pexp_extension ({txt = "sql"; loc}, pstr)} ->
-        call gen_sql loc pstr
-    | {pexp_desc = Pexp_extension ({txt = "sqlc"; loc}, pstr)} ->
-        call (gen_sql ~cacheable:true) loc pstr
-    | {pexp_desc = Pexp_extension ({txt = "sqlinit"; loc}, pstr)} ->
-        call (gen_sql ~init:true) loc pstr
-    | {pexp_desc = Pexp_extension ({txt = "sqlcheck"; loc}, pstr)} ->
-        call_sqlcheck loc pstr
-    (* Delegate to the default mapper *)
-    | x -> default_mapper.expr mapper x;
-})
+open Ppx_core.Std
+
+let sql =
+  Extension.V2.declare
+    "sql"
+    Extension.Context.expression
+    Ast_pattern.(pstr ((pstr_eval (pexp_constant (pconst_string __ __)) __) ^:: nil))
+    (fun ~loc ~path:_ sym _ _ ->
+      Ast_helper.with_default_loc loc (fun () -> gen_sql sym)
+    )
+;;
+
+let sqlc =
+  Extension.V2.declare
+    "sqlc"
+    Extension.Context.expression
+    Ast_pattern.(pstr ((pstr_eval (pexp_constant (pconst_string __ __)) __) ^:: nil))
+    (fun ~loc ~path:_ sym _ _ ->
+      Ast_helper.with_default_loc loc (fun () -> gen_sql ~cacheable:true sym)
+    )
+;;
+
+let sqlinit =
+  Extension.V2.declare
+    "sqlinit"
+    Extension.Context.expression
+    Ast_pattern.(pstr ((pstr_eval (pexp_constant (pconst_string __ __)) __) ^:: nil))
+    (fun ~loc ~path:_ sym _ _ ->
+      Ast_helper.with_default_loc loc (fun () -> gen_sql ~init:true sym)
+    )
+;;
+
+let sqlcheck =
+  Extension.V2.declare
+    "sqlcheck"
+    Extension.Context.expression
+    Ast_pattern.(pstr ((pstr_eval (pexp_constant (pconst_string __ __)) __) ^:: nil))
+    (fun ~loc ~path:_ sym _ _ ->
+      match sym with
+      | "sqlite" ->
+         Ast_helper.with_default_loc loc sqlcheck_sqlite
+      | _ ->
+         raise (Location.Error (Location.error ~loc "sqlcheck extension accepts \"sqlite\""))
+    )
+;;
 
 let () =
   Random.self_init ();
-  Ast_mapper.register "sqlexpr" new_mapper
+  Ppx_driver.register_transformation
+    "sqlexpr"
+    ~extensions:[sql; sqlc; sqlinit; sqlcheck]
+;;
 
 (* vim: set ft=ocaml: *)

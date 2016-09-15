@@ -1,0 +1,31 @@
+version = "${pkg_version}"
+description = "SQLite database access."
+requires = "csv sqlite3 estring lwt lwt.syntax lwt.unix unix threads"
+archive(byte) = "sqlexpr.cma"
+archive(byte, plugin) = "sqlexpr.cma"
+archive(native) = "sqlexpr.cmxa"
+archive(native, plugin) = "sqlexpr.cmxs"
+exists_if = "sqlexpr.cma"
+
+package "syntax" (
+ version = "${pkg_version}"
+ description = "Syntax extension for SQL statements/expressions"
+ requires = "camlp4 estring"
+ archive(syntax, preprocessor) = "sqlexpr_syntax.cma"
+ archive(syntax, toploop) = "sqlexpr_syntax.cma"
+ archive(syntax, preprocessor, native) = "sqlexpr_syntax.cmxa"
+ archive(syntax, preprocessor, native, plugin) = "sqlexpr_syntax.cmxs"
+ exists_if = "sqlexpr_syntax.cma"
+)
+
+package "ppx" (
+version = "${pkg_version}"
+ description = "PPX extension for SQL statements/expressions"
+ requires = "compiler-libs.common ppx_core ppx_driver sqlexpr"
+ archive(ppx_driver, byte) = "ppx_sqlexpr.cma"
+ archive(ppx_driver, native) = "ppx_sqlexpr.cmxa"
+ plugin(ppx_driver, byte) = "ppx_sqlexpr.cma"
+ plugin(ppx_driver, native) = "ppx_sqlexpr.cmxs"
+ ppx(-ppx_driver,-custom_ppx) = "./ppx"
+ exists_if = "ppx_sqlexpr.cma"
+)
