@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: a04b61416bfd846b150ecf9f7b37ab54)
+# DO NOT EDIT (digest: 2a6cd49015c1c2bf255e62a5b6cf9d26)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -29,56 +29,32 @@ true: annot, bin_annot
 <src/syntax/*.ml{,i,y}>: package(camlp4.lib)
 <src/syntax/*.ml{,i,y}>: package(camlp4.quotations.r)
 <src/syntax/*.ml{,i,y}>: package(estring)
-# Library ppx_sqlexpr
-"src/ppx/ppx_sqlexpr.cmxs": use_ppx_sqlexpr
+# Library ppx
+"src/ppx/ppx.cmxs": use_ppx
 <src/ppx/*.ml{,i,y}>: package(compiler-libs.common)
-<src/ppx/*.ml{,i,y}>: package(csv)
-<src/ppx/*.ml{,i,y}>: package(estring)
-<src/ppx/*.ml{,i,y}>: package(lwt)
-<src/ppx/*.ml{,i,y}>: package(lwt.syntax)
-<src/ppx/*.ml{,i,y}>: package(lwt.unix)
 <src/ppx/*.ml{,i,y}>: package(ppx_core)
 <src/ppx/*.ml{,i,y}>: package(ppx_driver)
 <src/ppx/*.ml{,i,y}>: package(ppx_tools)
 <src/ppx/*.ml{,i,y}>: package(ppx_tools.metaquot)
 <src/ppx/*.ml{,i,y}>: package(re.pcre)
-<src/ppx/*.ml{,i,y}>: package(sqlite3)
 <src/ppx/*.ml{,i,y}>: package(threads)
-<src/ppx/*.ml{,i,y}>: package(unix)
-<src/ppx/*.ml{,i,y}>: use_sqlexpr
 # Executable ppx
 <src/as_ppx/ppx.{native,byte}>: package(compiler-libs.common)
-<src/as_ppx/ppx.{native,byte}>: package(csv)
-<src/as_ppx/ppx.{native,byte}>: package(estring)
-<src/as_ppx/ppx.{native,byte}>: package(lwt)
-<src/as_ppx/ppx.{native,byte}>: package(lwt.syntax)
-<src/as_ppx/ppx.{native,byte}>: package(lwt.unix)
 <src/as_ppx/ppx.{native,byte}>: package(ppx_core)
 <src/as_ppx/ppx.{native,byte}>: package(ppx_driver)
 <src/as_ppx/ppx.{native,byte}>: package(ppx_tools)
 <src/as_ppx/ppx.{native,byte}>: package(ppx_tools.metaquot)
 <src/as_ppx/ppx.{native,byte}>: package(re.pcre)
-<src/as_ppx/ppx.{native,byte}>: package(sqlite3)
 <src/as_ppx/ppx.{native,byte}>: package(threads)
-<src/as_ppx/ppx.{native,byte}>: package(unix)
-<src/as_ppx/ppx.{native,byte}>: use_ppx_sqlexpr
-<src/as_ppx/ppx.{native,byte}>: use_sqlexpr
+<src/as_ppx/ppx.{native,byte}>: use_ppx
 <src/as_ppx/*.ml{,i,y}>: package(compiler-libs.common)
-<src/as_ppx/*.ml{,i,y}>: package(csv)
-<src/as_ppx/*.ml{,i,y}>: package(estring)
-<src/as_ppx/*.ml{,i,y}>: package(lwt)
-<src/as_ppx/*.ml{,i,y}>: package(lwt.syntax)
-<src/as_ppx/*.ml{,i,y}>: package(lwt.unix)
 <src/as_ppx/*.ml{,i,y}>: package(ppx_core)
 <src/as_ppx/*.ml{,i,y}>: package(ppx_driver)
 <src/as_ppx/*.ml{,i,y}>: package(ppx_tools)
 <src/as_ppx/*.ml{,i,y}>: package(ppx_tools.metaquot)
 <src/as_ppx/*.ml{,i,y}>: package(re.pcre)
-<src/as_ppx/*.ml{,i,y}>: package(sqlite3)
 <src/as_ppx/*.ml{,i,y}>: package(threads)
-<src/as_ppx/*.ml{,i,y}>: package(unix)
-<src/as_ppx/*.ml{,i,y}>: use_ppx_sqlexpr
-<src/as_ppx/*.ml{,i,y}>: use_sqlexpr
+<src/as_ppx/*.ml{,i,y}>: use_ppx
 # Executable example
 <tests/example.{native,byte}>: package(camlp4.lib)
 <tests/example.{native,byte}>: package(camlp4.quotations.r)

@@ -10,7 +10,7 @@ BuildTools:  ocamlbuild
 Homepage:    http://github.com/mfp/ocaml-sqlexpr
 OCamlVersion: >= 4.01
 AlphaFeatures: ocamlbuild_more_args
-XOCamlbuildPluginTags: package(cppo_ocamlbuild), package(ppx_driver.ocamlbuild)
+XOCamlbuildPluginTags: package(cppo_ocamlbuild), package(ppx_driver.ocamlbuild), package(js-build-tools.ocamlbuild_goodies)
 FilesAB:     src/META.ab
 Description:
   Minimalistic library and syntax extension for type-safe, convenient execution
@@ -35,7 +35,7 @@ SourceRepository github
   Location: git://github.com/mfp/ocaml-sqlexpr.git
 
 Library sqlexpr
-  Path:             src
+  Path:             src/
   BuildTools:       ocamlbuild
   Modules:          Sqlexpr_concurrency,
                     Sqlexpr_sqlite,
@@ -52,11 +52,11 @@ Library "sqlexpr_syntax"
   Modules:          Pa_sql
   BuildDepends:     camlp4.lib, camlp4.quotations.r, estring
 
-Library "ppx_sqlexpr"
+Library "ppx"
   Path:             src/ppx/
   FindlibName:      ppx
   FindlibParent:    sqlexpr
-  Modules:          Sqlexpr_parser, Ppx_sqlexpr
+  Modules:          Ppx_sqlexpr, Sqlexpr_parser
   BuildDepends:
     compiler-libs.common,
     threads,
@@ -64,8 +64,7 @@ Library "ppx_sqlexpr"
     ppx_driver,
     ppx_tools,
     ppx_tools.metaquot,
-    re.pcre,
-    sqlexpr
+    re.pcre
 
 Executable "ppx"
   Path:             src/as_ppx/
